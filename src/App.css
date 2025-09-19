@@ -1,0 +1,92 @@
+/* ===========================
+   App.css - Header & Search
+   =========================== */
+
+/* ---------------------------
+   Header container
+--------------------------- */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: transparent; /* no background box */
+}
+
+/* ---------------------------
+   Logo / Home link
+--------------------------- */
+header a {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333; /* text color */
+  text-decoration: none;
+}
+
+/* ---------------------------
+   Search bar container
+--------------------------- */
+header form {
+  flex: 1;
+  max-width: 36rem; /* adjust width */
+  margin: 0 2rem;
+  display: flex;
+  border-radius: 9999px; /* fully rounded */
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Search input */
+header form input {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  color: #333;
+  border: none;
+  outline: none;
+}
+
+/* Search button */
+header form button {
+  padding: 0 1rem;
+  background-color: #facc15; /* yellow button */
+  color: white;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+header form button:hover {
+  background-color: #eab308; /* darker yellow on hover */
+}
+
+/* ---------------------------
+   Cart icon
+--------------------------- */
+header .cart-icon {
+  position: relative;
+  cursor: pointer;
+}
+
+header .cart-icon img {
+  width: 2rem;
+  height: 2rem;
+}
+
+header .cart-icon span {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.5rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 9999px;
+  background-color: #facc15;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+}

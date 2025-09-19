@@ -1,0 +1,13 @@
+.section {
+  margin: 40px 20px;
+}
+
+.section h2 {
+  margin-bottom: 20px;
+}
+
+.section-products {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
