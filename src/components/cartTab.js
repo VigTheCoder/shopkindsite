@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import CartItem from './cartItem';
-import { toggleStatusTab } from '../stores/cart';
+import { toggleStatusTab, changeQuantity } from '../stores/cart';
 import { calculateRoundedDonation } from '../utils/donation';
 import { useNavigate } from 'react-router-dom';
+import { products } from '../data/products';
 
 const CartTab = () => {
-  const carts = useSelector((store) => store.cart.items);
+  const carts = useSelector((store) => store.cart.items || []);
   const statusTab = useSelector((store) => store.cart.statusTab);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,12 +18,35 @@ const CartTab = () => {
     dispatch(toggleStatusTab());
   };
 
-  const totalDonation = carts.reduce(
-    (sum, item) => sum + calculateRoundedDonation(item.price * item.quantity, donationPercentage),
-    0
-  );
+  // Update quantity or remove item if quantity reaches 0
+  const handleMinusQuantity = (productId, quantity) => {
+    dispatch(changeQuantity({ productId, quantity: Math.max(quantity - 1, 0) }));
+  };
 
-  const totalCartAmount = carts.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const handlePlusQuantity = (productId, quantity) => {
+    dispatch(changeQuantity({ productId, quantity: quantity + 1 }));
+  };
+
+  // Only consider items with quantity > 0 for calculations
+  const validItems = carts.filter((item) => item.quantity > 0);
+
+  const totalCartAmount = validItems.reduce((sum, item) => {
+    const productDetail = products.find((p) => p.id === item.productId);
+    const price = productDetail?.price || 0;
+    return sum + price * item.quantity;
+  }, 0);
+
+  const totalDonation = validItems.reduce((sum, item) => {
+    const productDetail = products.find((p) => p.id === item.productId);
+    const price = productDetail?.price || 0;
+    return sum + calculateRoundedDonation(price * item.quantity, donationPercentage);
+  }, 0);
+
+  const finalTotal = totalCartAmount + (includeDonation ? totalDonation : 0);
+
+  const handleCheckout = () => {
+    navigate('/payment', { state: { finalTotal, includeDonation } });
+  };
 
   return (
     <div
@@ -38,14 +62,33 @@ const CartTab = () => {
 
       {/* Cart Items */}
       <div className="p-4 space-y-4 overflow-y-auto">
-        {carts.map((item, key) => {
-          const suggestedDonation = calculateRoundedDonation(item.price * item.quantity, donationPercentage);
+        {validItems.map((item, idx) => {
+          const productDetail = products.find((p) => p.id === item.productId);
+          const price = productDetail?.price || 0;
+          const suggestedDonation = calculateRoundedDonation(price * item.quantity, donationPercentage);
+
           return (
-            <div key={key} className="bg-gray-700 p-3 rounded-lg text-white">
-              <CartItem data={item} />
-              <p className="text-xs text-amber-400 mt-1">
-                Suggested Donation: ${suggestedDonation}
-              </p>
+            <div key={idx} className="bg-gray-700 p-3 rounded-lg text-white flex flex-col gap-2">
+              <div className="flex justify-between items-center gap-2">
+                <CartItem data={item} showDonation={true} />
+
+                <div className="flex flex-col items-center gap-1">
+                  <button
+                    className="bg-gray-200 rounded-full w-6 h-6 text-cyan-600"
+                    onClick={() => handleMinusQuantity(item.productId, item.quantity)}
+                  >
+                    -
+                  </button>
+                  <span>{item.quantity}</span>
+                  <button
+                    className="bg-gray-200 rounded-full w-6 h-6 text-cyan-600"
+                    onClick={() => handlePlusQuantity(item.productId, item.quantity)}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <p className="text-xs text-amber-400">Suggested Donation: ${suggestedDonation.toFixed(2)}</p>
             </div>
           );
         })}
@@ -60,7 +103,7 @@ const CartTab = () => {
 
         <div className="flex justify-between text-amber-400 text-sm font-medium">
           <span>Total Suggested Donation:</span>
-          <span>${totalDonation}</span>
+          <span>${totalDonation.toFixed(2)}</span>
         </div>
 
         <label className="flex items-center gap-2 mt-2 bg-yellow-50 p-2 rounded-lg border border-amber-200 cursor-pointer hover:bg-yellow-100">
@@ -75,12 +118,12 @@ const CartTab = () => {
 
         <div className="flex justify-between items-center mt-3 text-lg font-bold text-gray-900">
           <span>Final Total:</span>
-          <span>${(totalCartAmount + (includeDonation ? totalDonation : 0)).toFixed(2)}</span>
+          <span>${finalTotal.toFixed(2)}</span>
         </div>
 
         <button
           className="w-full bg-amber-600 text-white py-2 mt-3 rounded-md text-sm font-medium hover:bg-amber-700 transition"
-          onClick={() => navigate('/payment')}
+          onClick={handleCheckout}
         >
           Proceed to Checkout
         </button>
