@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/shopkindsite/static/css/main.03e46293.css",
-    "main.js": "/shopkindsite/static/js/main.73a308fa.js",
+    "main.js": "/shopkindsite/static/js/main.5fe0c557.js",
     "static/media/tatesd.webp": "/shopkindsite/static/media/tatesd.b0137c61a946255edd36.webp",
     "static/media/mandmd.webp": "/shopkindsite/static/media/mandmd.fc77249cdbe07ddd275e.webp",
     "static/media/tatesc.webp": "/shopkindsite/static/media/tatesc.fb96ddc370381e9dbfa2.webp",
@@ -143,10 +143,10 @@
     "static/media/biscoffb.webp": "/shopkindsite/static/media/biscoffb.f45bd3490a4e7dbc2770.webp",
     "index.html": "/shopkindsite/index.html",
     "main.03e46293.css.map": "/shopkindsite/static/css/main.03e46293.css.map",
-    "main.73a308fa.js.map": "/shopkindsite/static/js/main.73a308fa.js.map"
+    "main.5fe0c557.js.map": "/shopkindsite/static/js/main.5fe0c557.js.map"
   },
   "entrypoints": [
     "static/css/main.03e46293.css",
-    "static/js/main.73a308fa.js"
+    "static/js/main.5fe0c557.js"
   ]
 }
